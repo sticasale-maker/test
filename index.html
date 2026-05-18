@@ -23,16 +23,13 @@ body {
   color: var(--text);
   font-family: 'Barlow Condensed', sans-serif;
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  user-select: none;
-  overflow-x: hidden;
+  display: flex; flex-direction: column;
+  user-select: none; overflow-x: hidden;
 }
 
 /* ── Start screen ── */
 #startScreen {
-  position: fixed; inset: 0;
-  background: var(--bg);
+  position: fixed; inset: 0; background: var(--bg);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 24px; z-index: 100; padding: 40px;
@@ -54,164 +51,192 @@ body {
   color: var(--accent); cursor: pointer;
 }
 .start-btn:active { background: rgba(0,212,255,0.2); }
-.start-note {
-  font-size: 12px; color: var(--muted);
-  text-align: center; line-height: 1.8; max-width: 300px;
-}
+.start-note { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.8; max-width: 300px; }
 
 /* ── Header ── */
 header {
-  display: flex; align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 12px 16px;
   border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  flex-shrink: 0;
+  background: var(--surface); flex-shrink: 0;
 }
 .logo { font-family: 'Share Tech Mono', monospace; font-size: 18px; color: var(--accent); letter-spacing: 3px; }
 .gps-pill {
   display: flex; align-items: center; gap: 6px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; color: var(--muted);
-  background: rgba(0,0,0,0.4);
-  border: 1px solid var(--border);
+  font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--muted);
+  background: rgba(0,0,0,0.4); border: 1px solid var(--border);
   border-radius: 20px; padding: 4px 10px;
 }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
-.dot.on  { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+.dot.on   { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
 .dot.blink { background: var(--warn); animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: 0.15; } }
 
 /* ── Main ── */
-main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 12px; overflow-y: auto; }
+main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 10px; overflow-y: auto; }
 
-/* ── My position card ── */
-.pos-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 14px;
-  display: flex; justify-content: space-between; align-items: center; gap: 8px;
-}
-.pos-label { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; }
-.pos-val { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text); }
-.acc-badge {
-  font-family: 'Share Tech Mono', monospace; font-size: 11px;
-  padding: 3px 8px; border-radius: 4px;
-  background: rgba(0,0,0,0.3); border: 1px solid var(--border);
-  color: var(--muted); white-space: nowrap; flex-shrink: 0;
-}
-.acc-badge.good { border-color: rgba(0,255,157,0.3); color: var(--accent2); }
-.acc-badge.bad  { border-color: rgba(255,107,53,0.3); color: var(--warn); }
-
-/* ── Heading bar ── */
-.hdg-bar {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 14px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.hdg-label { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
-.hdg-val {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 32px; color: var(--accent);
-  text-shadow: 0 0 14px rgba(0,212,255,0.4);
-  letter-spacing: 2px;
-}
-.hdg-note { font-size: 11px; color: var(--muted); text-align: right; line-height: 1.5; }
-
-/* ── Waypoint table ── */
-.wp-section-title {
-  font-size: 10px; letter-spacing: 2px; color: var(--muted);
-  text-transform: uppercase; padding: 0 2px;
-}
-.wp-table {
+/* ── Waypoint card ── */
+.wp-card {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
+  position: relative;
 }
-.wp-table-header {
-  display: grid;
-  grid-template-columns: 28px 1fr 72px 72px 80px;
-  padding: 8px 12px;
-  background: rgba(0,0,0,0.3);
-  border-bottom: 1px solid var(--border);
-  font-size: 10px; letter-spacing: 2px;
-  color: var(--muted); text-transform: uppercase;
+.wp-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--card-color, var(--accent));
 }
-.wp-row {
-  display: grid;
-  grid-template-columns: 28px 1fr 72px 72px 80px;
-  padding: 12px 12px;
-  border-bottom: 1px solid rgba(0,212,255,0.06);
-  align-items: center;
-  transition: background 0.15s;
-}
-.wp-row:last-child { border-bottom: none; }
-.wp-row:active { background: rgba(0,212,255,0.04); }
+.wp-card.c1 { --card-color: var(--accent); }
+.wp-card.c2 { --card-color: var(--accent2); }
+.wp-card.c3 { --card-color: #ff9f43; }
+.wp-card.c4 { --card-color: #ee5a9b; }
 
-/* color dot col */
-.wp-color { display: flex; align-items: center; }
-.wp-bullet {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+/* card top row: name + buttons */
+.wp-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px 6px;
+  gap: 8px;
 }
-.c1 { background: var(--accent);  box-shadow: 0 0 6px var(--accent); }
-.c2 { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
-.c3 { background: #ff9f43;        box-shadow: 0 0 6px #ff9f43; }
-.c4 { background: #ee5a9b;        box-shadow: 0 0 6px #ee5a9b; }
+.wp-label-row { display: flex; align-items: center; gap: 8px; }
+.wp-bullet { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.c1 .wp-bullet { background: var(--accent);  box-shadow: 0 0 6px var(--accent); }
+.c2 .wp-bullet { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+.c3 .wp-bullet { background: #ff9f43;        box-shadow: 0 0 6px #ff9f43; }
+.c4 .wp-bullet { background: #ee5a9b;        box-shadow: 0 0 6px #ee5a9b; }
 
-/* name col */
-.wp-name-col { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.wp-name-val {
-  font-size: 14px; font-weight: 600;
-  color: var(--text); white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis;
-}
-.wp-name-sub { font-size: 10px; color: var(--muted); font-family: 'Share Tech Mono', monospace; }
-
-/* dist / bearing / actions cols */
-.wp-dist, .wp-bear { font-family: 'Share Tech Mono', monospace; }
-.wp-dist-val { font-size: 18px; color: var(--text); line-height: 1; }
-.wp-dist-unit { font-size: 10px; color: var(--muted); }
-.wp-bear-val { font-size: 18px; color: var(--text); line-height: 1; }
-.wp-bear-dir { font-size: 10px; color: var(--muted); }
-.wp-empty { font-size: 12px; color: var(--muted); font-style: italic; }
-
-.wp-actions-col { display: flex; gap: 6px; justify-content: flex-end; }
+.wp-title { font-size: 13px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+.wp-btns { display: flex; gap: 6px; }
 .btn-sm {
   font-family: 'Share Tech Mono', monospace;
   font-size: 10px; letter-spacing: 1px;
-  padding: 4px 8px; border-radius: 4px;
+  padding: 5px 9px; border-radius: 5px;
   border: 1px solid; cursor: pointer;
   background: transparent; line-height: 1;
 }
-.btn-set  { border-color: rgba(0,212,255,0.35); color: var(--accent); }
-.btn-set.c2 { border-color: rgba(0,255,157,0.35); color: var(--accent2); }
-.btn-set.c3 { border-color: rgba(255,159,67,0.35);  color: #ff9f43; }
-.btn-set.c4 { border-color: rgba(238,90,155,0.35);  color: #ee5a9b; }
-.btn-clr  { border-color: var(--border); color: var(--muted); }
-.btn-sm:active { opacity: 0.6; }
+.btn-here { border-color: rgba(0,212,255,0.35); color: var(--accent); }
+.c2 .btn-here { border-color: rgba(0,255,157,0.35); color: var(--accent2); }
+.c3 .btn-here { border-color: rgba(255,159,67,0.35);  color: #ff9f43; }
+.c4 .btn-here { border-color: rgba(238,90,155,0.35);  color: #ee5a9b; }
+.btn-coord { border-color: var(--border); color: var(--muted); }
+.btn-clr   { border-color: var(--border); color: var(--muted); }
+.btn-sm:active { opacity: 0.55; }
 
-/* ── Add waypoint button ── */
+/* coord sub-line */
+.wp-coord-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; color: var(--muted);
+  padding: 0 14px 6px;
+  letter-spacing: 0.5px;
+}
+
+/* big data row */
+.wp-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid rgba(0,212,255,0.07);
+}
+.wp-data-cell {
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.wp-data-cell:first-child {
+  border-right: 1px solid rgba(0,212,255,0.07);
+}
+.data-label {
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase;
+}
+.data-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 48px; font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+  letter-spacing: -1px;
+}
+.data-val.unset { font-size: 32px; color: var(--muted); letter-spacing: 0; }
+.data-unit {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px; color: var(--muted);
+}
+.data-sub {
+  font-size: 14px; color: var(--muted);
+  letter-spacing: 1px; margin-top: 2px;
+}
+
+/* ── Add button ── */
 .btn-add {
-  width: 100%; padding: 13px;
+  width: 100%; padding: 14px;
   font-family: 'Share Tech Mono', monospace;
   font-size: 13px; letter-spacing: 2px;
-  border-radius: 10px; border: 1px dashed rgba(0,212,255,0.3);
+  border-radius: 10px; border: 1px dashed rgba(0,212,255,0.25);
   background: transparent; color: var(--muted); cursor: pointer;
 }
 .btn-add:active { background: rgba(0,212,255,0.05); }
 
+/* ── Coord entry modal ── */
+#modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 20px;
+}
+#modal.hidden { display: none; }
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  width: 100%; max-width: 360px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.modal-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px; letter-spacing: 3px;
+  color: var(--accent); text-align: center;
+}
+.modal-note {
+  font-size: 12px; color: var(--muted);
+  text-align: center; line-height: 1.6;
+}
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+.field-input {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px; color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+  width: 100%; outline: none;
+  -webkit-appearance: none;
+}
+.field-input:focus { border-color: var(--accent); }
+.field-hint { font-size: 11px; color: var(--muted); }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btn {
+  flex: 1; padding: 13px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px; letter-spacing: 2px;
+  border-radius: 8px; border: 1px solid; cursor: pointer;
+  background: transparent;
+}
+.modal-btn.confirm {
+  border-color: var(--accent); color: var(--accent);
+  background: rgba(0,212,255,0.08);
+}
+.modal-btn.cancel { border-color: var(--border); color: var(--muted); }
+.modal-btn:active { opacity: 0.6; }
+.modal-error { font-size: 12px; color: var(--warn); text-align: center; min-height: 16px; }
+
 /* ── Debug log ── */
 #log {
-  background: rgba(0,0,0,0.5);
-  border: 1px solid rgba(0,212,255,0.08);
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,212,255,0.07);
   border-radius: 8px; padding: 8px 10px;
   font-family: 'Share Tech Mono', monospace;
   font-size: 10px; color: var(--muted);
-  line-height: 1.9; max-height: 90px; overflow-y: auto;
+  line-height: 1.9; max-height: 80px; overflow-y: auto;
 }
 .lok { color: var(--accent2); }
 .lerr { color: var(--warn); }
@@ -220,14 +245,37 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 12px;
 </head>
 <body>
 
+<!-- Start screen -->
 <div id="startScreen">
   <div class="start-logo">DIVENAV</div>
   <div class="start-sub">Multi-waypoint GPS navigator</div>
   <button class="start-btn" id="startBtn">START →</button>
   <div class="start-note">
     Tap START — Safari will ask for location access.<br><br>
-    <strong>No compass permission needed.</strong><br>
-    Heading is calculated from your GPS movement direction.
+    Waypoints can be set to your current position<br>or entered as coordinates manually.
+  </div>
+</div>
+
+<!-- Coord entry modal -->
+<div id="modal" class="hidden">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">ENTER COORDINATES</div>
+    <div class="modal-note">Decimal degrees (e.g. -33.98765, 151.23456)</div>
+    <div class="field-group">
+      <div class="field-label">Latitude</div>
+      <input class="field-input" id="inLat" type="text" inputmode="decimal" placeholder="-33.98765" autocomplete="off" autocorrect="off" spellcheck="false">
+      <div class="field-hint">Negative = South</div>
+    </div>
+    <div class="field-group">
+      <div class="field-label">Longitude</div>
+      <input class="field-input" id="inLon" type="text" inputmode="decimal" placeholder="151.23456" autocomplete="off" autocorrect="off" spellcheck="false">
+      <div class="field-hint">Positive = East</div>
+    </div>
+    <div class="modal-error" id="modalErr"></div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" id="modalCancel">CANCEL</button>
+      <button class="modal-btn confirm" id="modalConfirm">SET</button>
+    </div>
   </div>
 </div>
 
@@ -239,63 +287,27 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 12px;
   </div>
 </header>
 
-<main>
-
-  <!-- My position -->
-  <div class="pos-card">
-    <div>
-      <div class="pos-label">My position</div>
-      <div class="pos-val" id="posVal">—</div>
-    </div>
-    <div class="acc-badge" id="accBadge">±?m</div>
-  </div>
-
-  <!-- Heading -->
-  <div class="hdg-bar">
-    <div>
-      <div class="hdg-label">Course</div>
-      <div class="hdg-val" id="hdgVal">—°</div>
-    </div>
-    <div class="hdg-note" id="hdgNote">Move to update<br>course heading</div>
-  </div>
-
-  <!-- Waypoint table -->
-  <div class="wp-section-title">Waypoints</div>
-  <div class="wp-table">
-    <div class="wp-table-header">
-      <div></div>
-      <div>Name</div>
-      <div>Dist</div>
-      <div>Bearing</div>
-      <div></div>
-    </div>
-    <div id="wpRows"></div>
-  </div>
-
-  <!-- Add waypoint -->
+<main id="mainContent">
+  <div id="wpContainer"></div>
   <button class="btn-add" id="addBtn">+ ADD WAYPOINT</button>
-
-  <!-- Debug -->
   <div id="log"><span class="linf">Tap START…</span></div>
-
 </main>
 
 <script>
 var myPos = null;
-var myHdg = null;
+var modalIdx = -1;
+var lastLogTime = 0;
 var wps = [
   { name: 'WP 1', lat: null, lon: null },
   { name: 'WP 2', lat: null, lon: null }
 ];
-var colors = ['c1','c2','c3','c4'];
-var lastLogTime = 0;
+var colorClasses = ['c1','c2','c3','c4'];
 
 // ── Log ──
 function log(msg, cls) {
   var box = document.getElementById('log');
   var sp = document.createElement('span');
-  sp.className = cls || '';
-  sp.textContent = msg;
+  sp.className = cls || ''; sp.textContent = msg;
   box.appendChild(document.createElement('br'));
   box.appendChild(sp);
   box.scrollTop = box.scrollHeight;
@@ -304,146 +316,187 @@ function log(msg, cls) {
 // ── Math ──
 function haversine(la1, lo1, la2, lo2) {
   var R = 6371000;
-  var dL = (la2 - la1) * Math.PI / 180;
-  var dO = (lo2 - lo1) * Math.PI / 180;
-  var a = Math.sin(dL/2)*Math.sin(dL/2) + Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)*Math.sin(dO/2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var dL = (la2-la1)*Math.PI/180, dO = (lo2-lo1)*Math.PI/180;
+  var a = Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)*Math.sin(dO/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 function bearing(la1, lo1, la2, lo2) {
-  var dO = (lo2 - lo1) * Math.PI / 180;
-  var y = Math.sin(dO) * Math.cos(la2 * Math.PI / 180);
-  var x = Math.cos(la1*Math.PI/180)*Math.sin(la2*Math.PI/180) - Math.sin(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.cos(dO);
-  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  var dO = (lo2-lo1)*Math.PI/180;
+  var y = Math.sin(dO)*Math.cos(la2*Math.PI/180);
+  var x = Math.cos(la1*Math.PI/180)*Math.sin(la2*Math.PI/180)-Math.sin(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.cos(dO);
+  return (Math.atan2(y,x)*180/Math.PI+360)%360;
 }
 function fmtDist(m) {
   if (m < 1000) return { v: Math.round(m), u: 'm' };
   return { v: (m/1000).toFixed(2), u: 'km' };
 }
 function fmtCoord(la, lo) {
-  return Math.abs(la).toFixed(5) + (la >= 0 ? '°N' : '°S') + '  ' + Math.abs(lo).toFixed(5) + (lo >= 0 ? '°E' : '°W');
+  return Math.abs(la).toFixed(5)+(la>=0?'°N':'°S')+'  '+Math.abs(lo).toFixed(5)+(lo>=0?'°E':'°W');
 }
 function cardDir(b) {
   return ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(b/22.5)%16];
 }
 
-// ── Render waypoint rows ──
-function renderRows() {
-  var container = document.getElementById('wpRows');
+// ── Render ──
+function render() {
+  var container = document.getElementById('wpContainer');
   container.innerHTML = '';
+
   wps.forEach(function(wp, i) {
-    var c = colors[i] || colors[colors.length-1];
-    var row = document.createElement('div');
-    row.className = 'wp-row';
+    var c = colorClasses[Math.min(i, colorClasses.length-1)];
+    var card = document.createElement('div');
+    card.className = 'wp-card ' + c;
+    card.style.marginBottom = '10px';
 
-    // Color dot
-    var dotDiv = '<div class="wp-color"><div class="wp-bullet ' + c + '"></div></div>';
+    // Top row
+    var coordSub = wp.lat !== null ? fmtCoord(wp.lat, wp.lon) : 'no position set';
+    var clrBtn = wp.lat !== null ? '<button class="btn-sm btn-clr" onclick="clearWP('+i+')">CLR</button>' : '';
 
-    // Name + coords
-    var sub = wp.lat !== null ? fmtCoord(wp.lat, wp.lon) : 'not set';
-    var nameDiv = '<div class="wp-name-col"><div class="wp-name-val">' + wp.name + '</div><div class="wp-name-sub">' + sub + '</div></div>';
+    card.innerHTML =
+      '<div class="wp-top">'+
+        '<div class="wp-label-row">'+
+          '<div class="wp-bullet"></div>'+
+          '<div class="wp-title">'+wp.name+'</div>'+
+        '</div>'+
+        '<div class="wp-btns">'+
+          '<button class="btn-sm btn-here" onclick="setHere('+i+')">SET HERE</button>'+
+          '<button class="btn-sm btn-coord" onclick="openModal('+i+')">COORDS</button>'+
+          clrBtn+
+        '</div>'+
+      '</div>'+
+      '<div class="wp-coord-sub">'+coordSub+'</div>'+
+      '<div class="wp-data" id="data'+i+'"></div>';
 
-    // Distance
-    var distDiv = '';
-    if (wp.lat !== null && myPos) {
-      var d = fmtDist(haversine(myPos.lat, myPos.lon, wp.lat, wp.lon));
-      distDiv = '<div class="wp-dist"><div class="wp-dist-val">' + d.v + '</div><div class="wp-dist-unit">' + d.u + '</div></div>';
-    } else {
-      distDiv = '<div class="wp-dist wp-empty">—</div>';
-    }
-
-    // Bearing
-    var bearDiv = '';
-    if (wp.lat !== null && myPos) {
-      var b = bearing(myPos.lat, myPos.lon, wp.lat, wp.lon);
-      bearDiv = '<div class="wp-bear"><div class="wp-bear-val">' + Math.round(b) + '°</div><div class="wp-bear-dir">' + cardDir(b) + '</div></div>';
-    } else {
-      bearDiv = '<div class="wp-bear wp-empty">—</div>';
-    }
-
-    // Actions
-    var setLabel = wp.lat !== null ? 'UPDATE' : 'SET';
-    var clrBtn = wp.lat !== null ? '<button class="btn-sm btn-clr" onclick="clearWP(' + i + ')">CLR</button>' : '';
-    var actDiv = '<div class="wp-actions-col"><button class="btn-sm btn-set ' + c + '" onclick="setWP(' + i + ')">' + setLabel + '</button>' + clrBtn + '</div>';
-
-    row.innerHTML = dotDiv + nameDiv + distDiv + bearDiv + actDiv;
-    container.appendChild(row);
+    container.appendChild(card);
+    updateDataCells(i, wp);
   });
 }
 
-// ── Set / clear ──
-function setWP(i) {
+function updateDataCells(i, wp) {
+  var el = document.getElementById('data'+i);
+  if (!el) return;
+
+  var distHTML, bearHTML;
+
+  if (wp.lat !== null && myPos) {
+    var dist = haversine(myPos.lat, myPos.lon, wp.lat, wp.lon);
+    var bear = bearing(myPos.lat, myPos.lon, wp.lat, wp.lon);
+    var d = fmtDist(dist);
+    distHTML =
+      '<div class="wp-data-cell">'+
+        '<div class="data-label">Distance</div>'+
+        '<div class="data-val">'+d.v+'</div>'+
+        '<div class="data-unit">'+d.u+'</div>'+
+      '</div>';
+    bearHTML =
+      '<div class="wp-data-cell">'+
+        '<div class="data-label">Bearing</div>'+
+        '<div class="data-val">'+Math.round(bear)+'°</div>'+
+        '<div class="data-sub">'+cardDir(bear)+'</div>'+
+      '</div>';
+  } else if (wp.lat !== null && !myPos) {
+    distHTML = '<div class="wp-data-cell"><div class="data-label">Distance</div><div class="data-val unset">No fix</div></div>';
+    bearHTML  = '<div class="wp-data-cell"><div class="data-label">Bearing</div><div class="data-val unset">No fix</div></div>';
+  } else {
+    distHTML = '<div class="wp-data-cell"><div class="data-label">Distance</div><div class="data-val unset">—</div></div>';
+    bearHTML  = '<div class="wp-data-cell"><div class="data-label">Bearing</div><div class="data-val unset">—</div></div>';
+  }
+
+  el.innerHTML = distHTML + bearHTML;
+}
+
+function refreshData() {
+  wps.forEach(function(wp, i) { updateDataCells(i, wp); });
+}
+
+// ── Set here / clear ──
+function setHere(i) {
   if (!myPos) { log('No GPS fix yet', 'lerr'); return; }
   wps[i].lat = myPos.lat;
   wps[i].lon = myPos.lon;
-  log('WP' + (i+1) + ' set ±' + Math.round(myPos.acc) + 'm', 'lok');
-  renderRows();
+  log('WP'+(i+1)+' set ±'+Math.round(myPos.acc)+'m', 'lok');
+  render();
 }
 function clearWP(i) {
-  wps[i].lat = null;
-  wps[i].lon = null;
-  renderRows();
+  wps[i].lat = null; wps[i].lon = null;
+  render();
 }
+
+// ── Coordinate modal ──
+function openModal(i) {
+  modalIdx = i;
+  document.getElementById('modalTitle').textContent = 'ENTER COORDS — ' + wps[i].name;
+  document.getElementById('inLat').value = wps[i].lat !== null ? wps[i].lat.toFixed(6) : '';
+  document.getElementById('inLon').value = wps[i].lon !== null ? wps[i].lon.toFixed(6) : '';
+  document.getElementById('modalErr').textContent = '';
+  document.getElementById('modal').classList.remove('hidden');
+  setTimeout(function(){ document.getElementById('inLat').focus(); }, 100);
+}
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+  modalIdx = -1;
+}
+document.getElementById('modalCancel').addEventListener('click', closeModal);
+document.getElementById('modalConfirm').addEventListener('click', function() {
+  var latStr = document.getElementById('inLat').value.trim().replace(',','.');
+  var lonStr = document.getElementById('inLon').value.trim().replace(',','.');
+  var la = parseFloat(latStr), lo = parseFloat(lonStr);
+  var err = '';
+  if (isNaN(la) || la < -90 || la > 90)  err = 'Latitude must be between -90 and 90';
+  else if (isNaN(lo) || lo < -180 || lo > 180) err = 'Longitude must be between -180 and 180';
+  if (err) { document.getElementById('modalErr').textContent = err; return; }
+  wps[modalIdx].lat = la;
+  wps[modalIdx].lon = lo;
+  log('WP'+(modalIdx+1)+' coords entered', 'lok');
+  closeModal();
+  render();
+});
+// Close on backdrop tap
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
 
 // ── Add waypoint ──
 document.getElementById('addBtn').addEventListener('click', function() {
-  var n = wps.length + 1;
-  wps.push({ name: 'WP ' + n, lat: null, lon: null });
-  renderRows();
+  wps.push({ name: 'WP '+(wps.length+1), lat: null, lon: null });
+  render();
 });
 
 // ── GPS ──
 function startGPS() {
   if (!navigator.geolocation) { log('Geolocation not supported', 'lerr'); return; }
-  log('Calling getCurrentPosition… (' + location.protocol + '//' + location.host + ')', 'linf');
+  log('Requesting GPS… ('+location.protocol+'//'+location.host+')', 'linf');
   var opts = { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 };
   navigator.geolocation.getCurrentPosition(onPos, onErr, opts);
   navigator.geolocation.watchPosition(onPos, onErr, { enableHighAccuracy: true, maximumAge: 2000, timeout: 15000 });
 }
-
 function onPos(p) {
   myPos = { lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy };
-
-  // Course from GPS movement (available when moving, beats magnetometer for this use case)
-  if (p.coords.heading !== null && !isNaN(p.coords.heading) && p.coords.heading >= 0 && p.coords.speed > 0.3) {
-    myHdg = p.coords.heading;
-    document.getElementById('hdgVal').textContent = Math.round(myHdg) + '°';
-    document.getElementById('hdgNote').textContent = cardDir(myHdg) + '  ' + Math.round(p.coords.speed * 1.944) + ' kn';
-  }
-
   document.getElementById('dot').className = 'dot on';
-  document.getElementById('gpsLbl').textContent = 'LOCKED';
-
-  var acc = p.coords.accuracy;
-  var badge = document.getElementById('accBadge');
-  badge.textContent = '±' + Math.round(acc) + 'm';
-  badge.className = 'acc-badge' + (acc <= 8 ? ' good' : acc > 25 ? ' bad' : '');
-
-  document.getElementById('posVal').textContent = fmtCoord(myPos.lat, myPos.lon);
-
+  document.getElementById('gpsLbl').textContent = '±'+Math.round(p.coords.accuracy)+'m';
   var now = Date.now();
   if (now - lastLogTime > 5000) {
-    log('GPS fix ±' + Math.round(acc) + 'm', 'lok');
+    log('GPS fix ±'+Math.round(p.coords.accuracy)+'m', 'lok');
     lastLogTime = now;
   }
-  renderRows();
+  refreshData();
 }
-
 function onErr(e) {
   document.getElementById('dot').className = 'dot blink';
   var msgs = {
     1: 'Permission denied — Settings → Privacy → Location Services → Safari → While Using',
-    2: 'Position unavailable — move to open sky',
-    3: 'GPS timeout — weak signal'
+    2: 'Position unavailable',
+    3: 'GPS timeout'
   };
-  document.getElementById('gpsLbl').textContent = 'ERR ' + e.code;
-  log('GPS error ' + e.code + ': ' + (msgs[e.code] || 'unknown'), 'lerr');
+  document.getElementById('gpsLbl').textContent = 'ERR '+e.code;
+  log('GPS error '+e.code+': '+(msgs[e.code]||'unknown'), 'lerr');
 }
 
 // ── Start ──
 document.getElementById('startBtn').addEventListener('click', function() {
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('log').innerHTML = '';
-  renderRows();
+  render();
   startGPS();
 });
 </script>
