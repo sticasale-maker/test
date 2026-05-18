@@ -297,10 +297,20 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 10px;
 var myPos = null;
 var modalIdx = -1;
 var lastLogTime = 0;
-var wps = [
-  { name: 'WP 1', lat: null, lon: null },
-  { name: 'WP 2', lat: null, lon: null }
-];
+function loadWPs() {
+  try {
+    var saved = localStorage.getItem('divenav_wps');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return [
+    { name: 'WP 1', lat: null, lon: null },
+    { name: 'WP 2', lat: null, lon: null }
+  ];
+}
+function saveWPs() {
+  try { localStorage.setItem('divenav_wps', JSON.stringify(wps)); } catch(e) {}
+}
+var wps = loadWPs();
 var colorClasses = ['c1','c2','c3','c4'];
 
 // ── Log ──
@@ -415,11 +425,11 @@ function setHere(i) {
   wps[i].lat = myPos.lat;
   wps[i].lon = myPos.lon;
   log('WP'+(i+1)+' set ±'+Math.round(myPos.acc)+'m', 'lok');
-  render();
+  saveWPs(); render();
 }
 function clearWP(i) {
   wps[i].lat = null; wps[i].lon = null;
-  render();
+  saveWPs(); render();
 }
 
 // ── Coordinate modal ──
@@ -449,7 +459,7 @@ document.getElementById('modalConfirm').addEventListener('click', function() {
   wps[modalIdx].lon = lo;
   log('WP'+(modalIdx+1)+' coords entered', 'lok');
   closeModal();
-  render();
+  saveWPs(); render();
 });
 // Close on backdrop tap
 document.getElementById('modal').addEventListener('click', function(e) {
@@ -459,7 +469,7 @@ document.getElementById('modal').addEventListener('click', function(e) {
 // ── Add waypoint ──
 document.getElementById('addBtn').addEventListener('click', function() {
   wps.push({ name: 'WP '+(wps.length+1), lat: null, lon: null });
-  render();
+  saveWPs(); render();
 });
 
 // ── GPS ──
@@ -496,6 +506,7 @@ function onErr(e) {
 document.getElementById('startBtn').addEventListener('click', function() {
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('log').innerHTML = '';
+  wps = loadWPs();
   render();
   startGPS();
 });
