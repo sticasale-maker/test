@@ -98,7 +98,7 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 10px;
 /* card top row: name + buttons */
 .wp-top {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px 6px;
+  padding: 5px 14px 2px;
   gap: 8px;
 }
 .wp-label-row { display: flex; align-items: center; gap: 8px; }
@@ -137,7 +137,7 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 10px;
 .wp-coord-sub {
   font-family: 'Share Tech Mono', monospace;
   font-size: 10px; color: var(--muted);
-  padding: 0 14px 6px;
+  padding: 0 14px 2px;
   letter-spacing: 0.5px;
 }
 
@@ -148,8 +148,8 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 10px;
   border-top: 1px solid rgba(0,212,255,0.07);
 }
 .wp-data-cell {
-  padding: 14px 16px;
-  display: flex; flex-direction: column; gap: 4px;
+  padding: 6px 16px 8px;
+  display: flex; flex-direction: column; gap: 1px;
 }
 .wp-data-cell:first-child {
   border-right: 1px solid rgba(0,212,255,0.07);
@@ -252,44 +252,13 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 10px;
 .lerr { color: var(--warn); }
 .linf { color: var(--accent); }
 
-/* ── Dive Lock overlay ── */
-#diveLockOverlay {
+/* ── Dive Lock shield (transparent, blocks touches below the header) ── */
+#diveLockShield {
   display: none;
-  position: fixed; inset: 0; z-index: 999;
-  background: rgba(0,0,0,0.82);
-  flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 18px;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-}
-#diveLockOverlay.active { display: flex; }
-.lock-icon {
-  font-size: 52px; line-height: 1;
-  filter: drop-shadow(0 0 18px rgba(0,212,255,0.6));
-}
-.lock-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 22px; letter-spacing: 6px;
-  color: var(--accent);
-  text-shadow: 0 0 20px rgba(0,212,255,0.5);
-}
-.lock-hint {
-  font-size: 12px; letter-spacing: 2px;
-  color: var(--muted); text-align: center;
-  line-height: 1.9; max-width: 260px;
-}
-.lock-progress-wrap {
-  width: 220px; height: 6px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 3px; overflow: hidden;
-}
-.lock-progress-bar {
-  height: 100%; width: 0%;
-  background: var(--accent);
-  border-radius: 3px;
-  box-shadow: 0 0 8px var(--accent);
-  transition: width 0.05s linear;
+  position: fixed;
+  top: 61px; left: 0; right: 0; bottom: 0;
+  z-index: 999;
+  background: transparent;
 }
 
 /* ── Lock button in header ── */
@@ -323,15 +292,8 @@ main { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 10px;
   </div>
 </div>
 
-<!-- Dive Lock overlay -->
-<div id="diveLockOverlay">
-  <div class="lock-icon">🔒</div>
-  <div class="lock-label">DIVE LOCK</div>
-  <div class="lock-hint">Screen & touch locked.<br>Hold the screen for 3 sec to unlock.</div>
-  <div class="lock-progress-wrap">
-    <div class="lock-progress-bar" id="lockProgressBar"></div>
-  </div>
-</div>
+<!-- Dive Lock shield -->
+<div id="diveLockShield"></div>
 
 <!-- Coord entry modal -->
 <div id="modal" class="hidden">
@@ -391,57 +353,6 @@ document.addEventListener('visibilitychange', function() {
 
 // ── Dive Lock ──
 var diveLocked = false;
-var lockHoldTimer = null;
-var lockHoldStart = null;
-var lockProgressAnim = null;
-var HOLD_MS = 3000;
-
-function enterDiveLock() {
-  diveLocked = true;
-  document.getElementById('diveLockOverlay').classList.add('active');
-  document.getElementById('lockBtn').textContent = '🔓 LOCKED';
-  document.getElementById('lockBtn').classList.add('locked');
-  document.getElementById('lockProgressBar').style.width = '0%';
-
-  // Block all touch/click events on the page (but not our overlay handler)
-  document.body.addEventListener('touchstart', absorbEvent, { capture: true, passive: false });
-  document.body.addEventListener('touchmove',  absorbEvent, { capture: true, passive: false });
-  document.body.addEventListener('touchend',   absorbEvent, { capture: true, passive: false });
-  document.body.addEventListener('click',      absorbEvent, { capture: true });
-
-  // Suppress shake-to-undo: intercept devicemotion at capture phase
-  window.addEventListener('devicemotion', absorbEvent, { capture: true });
-
-  // Setup unlock hold gesture on the overlay itself
-  var overlay = document.getElementById('diveLockOverlay');
-  overlay.addEventListener('touchstart', onLockTouchStart, { passive: false });
-  overlay.addEventListener('touchend',   onLockTouchEnd,   { passive: false });
-  overlay.addEventListener('touchcancel',onLockTouchEnd,   { passive: false });
-  overlay.addEventListener('mousedown',  onLockTouchStart);
-  overlay.addEventListener('mouseup',    onLockTouchEnd);
-}
-
-function exitDiveLock() {
-  diveLocked = false;
-  document.getElementById('diveLockOverlay').classList.remove('active');
-  document.getElementById('lockBtn').textContent = '🔒 LOCK';
-  document.getElementById('lockBtn').classList.remove('locked');
-  document.getElementById('lockProgressBar').style.width = '0%';
-  cancelLockHold();
-
-  document.body.removeEventListener('touchstart', absorbEvent, { capture: true });
-  document.body.removeEventListener('touchmove',  absorbEvent, { capture: true });
-  document.body.removeEventListener('touchend',   absorbEvent, { capture: true });
-  document.body.removeEventListener('click',      absorbEvent, { capture: true });
-  window.removeEventListener('devicemotion', absorbEvent, { capture: true });
-
-  var overlay = document.getElementById('diveLockOverlay');
-  overlay.removeEventListener('touchstart', onLockTouchStart);
-  overlay.removeEventListener('touchend',   onLockTouchEnd);
-  overlay.removeEventListener('touchcancel',onLockTouchEnd);
-  overlay.removeEventListener('mousedown',  onLockTouchStart);
-  overlay.removeEventListener('mouseup',    onLockTouchEnd);
-}
 
 function absorbEvent(e) {
   e.preventDefault();
@@ -449,37 +360,23 @@ function absorbEvent(e) {
   e.stopImmediatePropagation();
 }
 
-function onLockTouchStart(e) {
-  e.stopPropagation();
-  lockHoldStart = Date.now();
-  var bar = document.getElementById('lockProgressBar');
-  bar.style.transition = 'none';
-  bar.style.width = '0%';
-
-  function animFrame() {
-    if (!lockHoldStart) return;
-    var elapsed = Date.now() - lockHoldStart;
-    var pct = Math.min(100, (elapsed / HOLD_MS) * 100);
-    bar.style.width = pct + '%';
-    if (pct < 100) {
-      lockProgressAnim = requestAnimationFrame(animFrame);
-    } else {
-      exitDiveLock();
-    }
-  }
-  lockProgressAnim = requestAnimationFrame(animFrame);
+function enterDiveLock() {
+  diveLocked = true;
+  document.getElementById('diveLockShield').style.display = 'block';
+  var btn = document.getElementById('lockBtn');
+  btn.textContent = '🔓 UNLOCK';
+  btn.classList.add('locked');
+  // suppress shake-to-undo
+  window.addEventListener('devicemotion', absorbEvent, { capture: true });
 }
 
-function onLockTouchEnd(e) {
-  e.stopPropagation();
-  cancelLockHold();
-}
-
-function cancelLockHold() {
-  lockHoldStart = null;
-  if (lockProgressAnim) { cancelAnimationFrame(lockProgressAnim); lockProgressAnim = null; }
-  var bar = document.getElementById('lockProgressBar');
-  if (bar) bar.style.width = '0%';
+function exitDiveLock() {
+  diveLocked = false;
+  document.getElementById('diveLockShield').style.display = 'none';
+  var btn = document.getElementById('lockBtn');
+  btn.textContent = '🔒 LOCK';
+  btn.classList.remove('locked');
+  window.removeEventListener('devicemotion', absorbEvent, { capture: true });
 }
 
 document.getElementById('lockBtn').addEventListener('click', function() {
